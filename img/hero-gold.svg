@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="800" height="800">
+  <defs>
+    <linearGradient id="bar" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FBEFB8"/>
+      <stop offset="0.45" stop-color="#E6C35A"/>
+      <stop offset="0.7" stop-color="#C9A24B"/>
+      <stop offset="1" stop-color="#8A6D2F"/>
+    </linearGradient>
+    <linearGradient id="barTop" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFF6D5"/>
+      <stop offset="1" stop-color="#E0B85A"/>
+    </linearGradient>
+    <radialGradient id="coin" cx="0.4" cy="0.35" r="0.8">
+      <stop offset="0" stop-color="#FCEFAE"/>
+      <stop offset="0.6" stop-color="#D8B24E"/>
+      <stop offset="1" stop-color="#9A772F"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="rgba(201,162,75,0.45)"/>
+      <stop offset="1" stop-color="rgba(201,162,75,0)"/>
+    </radialGradient>
+  </defs>
+
+  <circle cx="470" cy="400" r="360" fill="url(#glow)"/>
+
+  <!-- coins pile -->
+  <g opacity="0.95">
+    <ellipse cx="300" cy="650" rx="120" ry="34" fill="url(#coin)"/>
+    <ellipse cx="300" cy="635" rx="120" ry="34" fill="#E8C766"/>
+    <ellipse cx="430" cy="665" rx="100" ry="28" fill="url(#coin)"/>
+    <ellipse cx="430" cy="652" rx="100" ry="28" fill="#E8C766"/>
+    <ellipse cx="360" cy="610" rx="110" ry="30" fill="url(#coin)"/>
+    <ellipse cx="360" cy="596" rx="110" ry="30" fill="#F0D277"/>
+  </g>
+
+  <!-- bar 1 (rotated) -->
+  <g transform="translate(320 300) rotate(-18)">
+    <polygon points="0,40 200,0 230,70 30,110" fill="url(#barTop)"/>
+    <polygon points="30,110 230,70 230,150 30,190" fill="url(#bar)"/>
+    <polygon points="0,40 30,110 30,190 0,120" fill="#7d5f28"/>
+    <text x="70" y="95" fill="#7a5d22" font-size="22" font-weight="700" font-family="Georgia,serif" transform="rotate(-2)">FINE GOLD</text>
+    <text x="95" y="135" fill="#7a5d22" font-size="18" font-weight="700" font-family="Georgia,serif" transform="rotate(8)">999.9</text>
+  </g>
+
+  <!-- bar 2 -->
+  <g transform="translate(360 430) rotate(10)">
+    <polygon points="0,40 210,0 240,70 30,110" fill="url(#barTop)"/>
+    <polygon points="30,110 240,70 240,160 30,200" fill="url(#bar)"/>
+    <polygon points="0,40 30,110 30,200 0,130" fill="#7d5f28"/>
+    <text x="75" y="100" fill="#7a5d22" font-size="22" font-weight="700" font-family="Georgia,serif" transform="rotate(-3)">FINE GOLD</text>
+    <text x="100" y="150" fill="#7a5d22" font-size="18" font-weight="700" font-family="Georgia,serif" transform="rotate(6)">1000 g</text>
+  </g>
+
+  <!-- floating coins -->
+  <g>
+    <circle cx="250" cy="430" r="38" fill="url(#coin)" stroke="#9A772F" stroke-width="2"/>
+    <text x="250" y="442" fill="#8a6a26" font-size="30" font-weight="700" text-anchor="middle" font-family="Georgia,serif">$</text>
+    <circle cx="620" cy="300" r="34" fill="url(#coin)" stroke="#9A772F" stroke-width="2"/>
+    <text x="620" y="311" fill="#8a6a26" font-size="26" font-weight="700" text-anchor="middle" font-family="Georgia,serif">$</text>
+    <circle cx="600" cy="540" r="40" fill="url(#coin)" stroke="#9A772F" stroke-width="2"/>
+    <text x="600" y="553" fill="#8a6a26" font-size="32" font-weight="700" text-anchor="middle" font-family="Georgia,serif">$</text>
+  </g>
+</svg>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cours de l'or — SAWA OR</title>
+<meta name="description" content="Cours de l'or du jour en Suisse — or 24 et 18 carats, argent. SAWA OR achète cash.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<section class="page-hero">
+  <h1 data-i18n="nav.cours">COURS DE L'OR</h1>
+</section>
+
+<section class="cours-panel">
+  <div class="container">
+    <div class="eyebrow" style="font-size:18px" data-i18n="intro.eyebrow">N°1 de l'achat d'or en Suisse</div>
+    <div style="margin-top:18px;color:#fff;font-weight:700" data-i18n="cours.eyebrow">Cours du jour</div>
+    <div class="date" id="coursDate">2026-06-24</div>
+    <div class="live-badge" id="liveBadge"><span class="dot"></span><span data-i18n="cours.loading">Mise à jour du cours…</span></div>
+    <div class="cash" data-i18n="cours.cash">Nous achetons cash*</div>
+    <div class="period">
+      <span data-i18n="cours.period">Sélectionner la période</span>
+      <select id="period">
+        <option value="7" data-i18n="cours.d7">7 jours</option>
+        <option value="30" data-i18n="cours.d30">30 jours</option>
+        <option value="90" data-i18n="cours.d90">90 jours</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section class="section section-dark" style="padding-top:10px">
+  <div class="container">
+    <div class="charts-grid" id="charts"></div>
+  </div>
+</section>
+
+<!-- Suivez le cours sur votre réseau -->
+<section class="follow">
+  <div class="container">
+    <h2 data-i18n="follow.title">Suivez le cours de l'or sur votre réseau préféré</h2>
+    <div class="brand-socs" id="brandSocs"></div>
+  </div>
+</section>
+
+<!-- Meilleur prix -->
+<section class="best-price">
+  <div class="container">
+    <h2 data-i18n="best.title">Nous achetons au meilleur prix tous vos métaux précieux</h2>
+    <div class="tagline" data-i18n="best.tag">Rapidité · Efficacité · Discrétion — Vendez votre or simplement</div>
+  </div>
+</section>
+
+<!-- Procédé en 5 étapes -->
+<section class="section section-dark" style="padding-top:20px">
+  <div class="container">
+    <div class="steps icons-row" id="stepsRow"></div>
+  </div>
+</section>
+
+<!-- Comprendre le cours -->
+<section class="understand">
+  <div class="container">
+    <div class="center"><h2 class="section-title gold-text" data-i18n="u.title">Comprendre le cours de l'or</h2></div>
+    <div class="cols">
+      <p data-i18n="u.p1"></p>
+      <p data-i18n="u.p2"></p>
+      <h3 data-i18n="u.h1">La rareté et la demande</h3>
+      <p data-i18n="u.p3"></p>
+      <h3 data-i18n="u.h2">L'or : une valeur refuge</h3>
+      <p data-i18n="u.p4"></p>
+      <h3 data-i18n="u.h3">Quand vendre son or ?</h3>
+      <p data-i18n="u.p5"></p>
+    </div>
+  </div>
+</section>
+
+<div id="footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/prices.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('header').innerHTML=buildHeader('cours');
+  document.getElementById('footer').innerHTML=buildFooter();
+  document.getElementById('brandSocs').innerHTML=brandSocials();
+  document.getElementById('stepsRow').innerHTML=stepsBlock();
+  initCommon();
+  document.getElementById('coursDate').textContent=COURS.date;
+
+  function chartCard(c,id){
+    const kg=c.value>=1000;
+    const val=kg?c.value.toLocaleString('en-US').replace(/,/g,"'")+".00":c.value.toFixed(2);
+    return `<div class="chart-card">
+      <h3>${tr(c.label)} = ${val}.- FRS / ${c.unit.split('/ ')[1].toUpperCase()}</h3>
+      ${lineChart(c.series,{id,unit:c.unit.split('/ ')[1],silver:c.silver})}
+    </div>`;
+  }
+  function draw(){
+    document.getElementById('charts').innerHTML=
+      chartCard(COURS.or24kg,1)+chartCard(COURS.or24gr,2)+chartCard(COURS.or18gr,3)+chartCard(COURS.argent,4);
+  }
+  draw();
+  // El selector reescala visualmente la serie (demostración)
+  document.getElementById('period').addEventListener('change',draw);
+
+  // ---- Precio del oro EN VIVO ----
+  function lang(){return localStorage.getItem('helvor_lang')||'fr';}
+  function t(k){return (I18N[lang()]&&I18N[lang()][k])||k;}
+  async function loadLive(){
+    const badge=document.getElementById('liveBadge');
+    const live=await fetchLivePrices();
+    if(!live){ badge.classList.add('off'); badge.querySelector('span:last-child').textContent='—'; return; }
+    // Anclar las series históricas al valor en vivo (conserva la tendencia)
+    COURS.or24kg.series=anchorSeries(COURS.or24kg.series,live.or24kg);
+    COURS.or24gr.series=anchorSeries(COURS.or24gr.series,live.or24gr);
+    COURS.or18gr.series=anchorSeries(COURS.or18gr.series,live.or18gr);
+    COURS.argent.series=anchorSeries(COURS.argent.series,live.argent);
+    COURS.or24kg.value=live.or24kg; COURS.or24gr.value=live.or24gr;
+    COURS.or18gr.value=live.or18gr; COURS.argent.value=live.argent;
+    if(live.date) COURS.date=live.date;
+    document.getElementById('coursDate').textContent=COURS.date;
+    badge.classList.add('on');
+    badge.querySelector('span:last-child').textContent=t('cours.live')+' · '+(live.updated||'');
+    draw();
+  }
+  loadLive();
+  setInterval(loadLive,60000); // refresca cada 60 s
+  // Actualiza el texto del badge al cambiar idioma
+  document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>{
+    draw(); // re-traduce las etiquetas de los gráficos
+    const badge=document.getElementById('liveBadge');
+    if(badge.classList.contains('on')) badge.querySelector('span:last-child').textContent=t('cours.live');
+  }));
+</script>
+</body>
+</html>

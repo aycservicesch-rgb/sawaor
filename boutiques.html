@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nos boutiques — SAWA OR</title>
+<meta name="description" content="Le réseau SAWA OR : 44 boutiques d'achat et vente d'or en Suisse. Trouvez la plus proche.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<section class="page-hero" style="min-height:40vh">
+  <h1 data-i18n="nav.boutiques">NOS BOUTIQUES</h1>
+</section>
+
+<!-- Mapa interactivo -->
+<section>
+  <div class="live-map" id="map"></div>
+</section>
+
+<section class="section section-pattern">
+  <div class="container">
+    <div class="center" style="max-width:860px">
+      <div class="eyebrow" data-i18n="bq.eyebrow">Réseau national</div>
+      <h2 class="section-title" data-i18n="bq.cov.title">Présents dans toute la Suisse</h2>
+      <p class="lead center" data-i18n="bq.cov.sub">Un réseau d'achat et de vente présent dans tous les cantons.</p>
+    </div>
+    <div class="cov-label center" data-i18n="bq.cov.cities">Villes &amp; régions couvertes</div>
+    <div class="cities" id="cities"></div>
+    <div class="center" style="margin-top:46px">
+      <a class="btn btn-gold" href="contact.html" data-i18n="hero.cta2">Vendre mon or</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('header').innerHTML=buildHeader('boutiques');
+  document.getElementById('footer').innerHTML=buildFooter();
+  initCommon();
+  document.getElementById('cities').innerHTML=renderCoverage();
+
+  // ---- Mapa Leaflet (tema oscuro + clusters dorados) ----
+  const map=L.map('map',{scrollWheelZoom:false}).setView([46.8,8.23],8);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+    attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:19
+  }).addTo(map);
+
+  const goldIcon=L.divIcon({
+    className:'',html:'<svg class="gold-pin" width="30" height="40" viewBox="0 0 30 40"><path d="M15 0C7 0 1 6 1 14c0 9 14 26 14 26s14-17 14-26C29 6 23 0 15 0Z" fill="#C9A24B"/><circle cx="15" cy="14" r="6" fill="#0a0a0a"/></svg>',
+    iconSize:[30,40],iconAnchor:[15,40],popupAnchor:[0,-36]
+  });
+  const cluster=L.markerClusterGroup({
+    maxClusterRadius:45,
+    iconCreateFunction:c=>L.divIcon({
+      html:'<div class="gold-cluster" style="width:46px;height:46px;font-size:16px">'+c.getChildCount()+'</div>',
+      className:'',iconSize:[46,46]
+    })
+  });
+  BOUTIQUES.forEach((b,i)=>{
+    const co=BOUTIQUE_COORDS[i]; if(!co) return;
+    L.marker(co,{icon:goldIcon}).bindPopup('<b>'+b[0]+'</b>').addTo(cluster);
+  });
+  map.addLayer(cluster);
+  map.fitBounds(cluster.getBounds().pad(0.15));
+</script>
+</body>
+</html>

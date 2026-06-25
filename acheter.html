@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Acheter de l'or en ligne — SAWA OR</title>
+<meta name="description" content="Achetez lingots, pièces et bijoux en or et argent certifiés. Livraison sécurisée en Suisse.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="header"></div>
+
+<section class="page-hero" style="min-height:46vh">
+  <h1 data-i18n="shop.title" style="font-size:clamp(36px,6vw,86px)">Acheter de l'or en ligne</h1>
+</section>
+
+<section class="section section-dark">
+  <div class="container">
+    <div class="center" style="max-width:820px">
+      <div class="eyebrow" data-i18n="shop.eyebrow">Boutique en ligne</div>
+      <p class="lead center" data-i18n="shop.intro">Achetez de l'or et de l'argent certifiés et recevez-les en toute sécurité.</p>
+    </div>
+
+    <div class="shop-cats" style="margin-top:40px">
+      <a class="shop-cat" href="#lingots" style="background-image:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.78)),url('img/photos/lingots.jpg')"><h3 data-i18n="shop.cat.lingot">Acheter des lingots</h3></a>
+      <a class="shop-cat" href="#monnaies" style="background-image:linear-gradient(180deg,rgba(0,0,0,.25),rgba(0,0,0,.78)),url('img/photos/coins.jpg')"><h3 data-i18n="shop.cat.coin">Pièces de monnaie</h3></a>
+    </div>
+
+    <h2 class="section-title" id="lingots" data-i18n="nav.lingots" style="font-size:34px">Lingots</h2>
+    <div class="products" id="lingotsGrid"></div>
+
+    <h2 class="section-title" id="monnaies" data-i18n="nav.coins" style="font-size:34px;margin-top:60px">Monnaies</h2>
+    <div class="products" id="coinsGrid"></div>
+
+    <h2 class="section-title" data-i18n="cat.bijou.t" style="font-size:34px;margin-top:60px">Bijouterie</h2>
+    <div class="products" id="bijouGrid"></div>
+
+    <div class="info-blocks">
+      <div class="info-block"><h3 data-i18n="shop.ship.t">Expédition sécurisée</h3><p data-i18n="shop.ship.p"></p></div>
+      <div class="info-block"><h3 data-i18n="shop.conf.t">Conformité &amp; transparence</h3><p data-i18n="shop.conf.p"></p></div>
+      <div class="info-block"><h3 data-i18n="shop.qual.t">Qualité garantie</h3><p data-i18n="shop.qual.p"></p></div>
+      <div class="info-block"><h3 data-i18n="shop.fees.t">Tarification &amp; frais</h3><p data-i18n="shop.fees.p"></p></div>
+    </div>
+  </div>
+</section>
+
+<div id="footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/main.js"></script>
+<script>
+  document.getElementById('header').innerHTML=buildHeader('shop');
+  document.getElementById('footer').innerHTML=buildFooter();
+  function paintShop(){
+    document.getElementById('lingotsGrid').innerHTML=renderProducts(['lingot']);
+    document.getElementById('coinsGrid').innerHTML=renderProducts(['piece']);
+    document.getElementById('bijouGrid').innerHTML=renderProducts(['bijou']);
+    applyLang(curLang()); // traduce los botones "Plus d'info" recién creados
+  }
+  paintShop();
+  initCommon();
+  document.querySelectorAll('.lang button').forEach(b=>b.addEventListener('click',()=>setTimeout(paintShop,0)));
+</script>
+</body>
+</html>
