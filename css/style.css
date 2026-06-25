@@ -67,8 +67,11 @@ ul{list-style:none}
   color:#fff;opacity:.85;transition:.2s;
 }
 .topbar .socials a:hover{color:var(--gold);opacity:1;transform:translateY(-1px)}
-.topbar .tel{font-weight:600;letter-spacing:.5px;color:#fff}
+.topbar-contact{display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center}
+.topbar .tel{font-weight:600;letter-spacing:.5px;color:#fff;display:inline-flex;align-items:center;gap:6px}
 .topbar .tel:hover{color:var(--gold)}
+.topbar .wa-top{color:#34d36b}
+.topbar .wa-top:hover{color:#5be08c}
 .topbar .right{display:flex;align-items:center;gap:22px}
 .topbar .icons{display:flex;align-items:center;gap:16px;color:#fff}
 .topbar .icons a{opacity:.85}.topbar .icons a:hover{opacity:1;color:var(--gold)}
@@ -528,6 +531,8 @@ section{position:relative}
   .lang button{font-size:13px}
 }
 @media(max-width:520px){
+  .topbar-contact .tel:not(.wa-top){display:none} /* deja solo WhatsApp arriba en móvil */
+  .topbar .wa-top{font-size:13px}
   .logo .name{font-size:24px}
   .products{grid-template-columns:1fr 1fr}
   .boutiques-grid{grid-template-columns:1fr}

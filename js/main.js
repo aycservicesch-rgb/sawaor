@@ -60,7 +60,13 @@ function buildHeader(active){
   const top=`
   <div class="topbar"><div class="container">
     <div class="socials">${socialLinks('')}</div>
-    <a class="tel" href="mailto:${EMAIL}">${EMAIL}</a>
+    <div class="topbar-contact">
+      <a class="tel" href="mailto:${EMAIL}">${EMAIL}</a>
+      <a class="tel wa-top" href="https://wa.me/${WA_RAW}" target="_blank" rel="noopener" aria-label="WhatsApp">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M.06 24l1.7-6.2A11.9 11.9 0 1 1 12 24a11.9 11.9 0 0 1-5.7-1.45L.06 24Zm6.6-3.8c1.6.96 3.1 1.5 5.3 1.5a9.9 9.9 0 1 0-9.9-9.9c0 2.3.6 3.9 1.6 5.5l-1 3.6 3.9-1ZM17.4 14c-.3-.15-1.7-.85-2-.95s-.45-.15-.65.15-.75.95-.9 1.1-.35.2-.65.05a8.1 8.1 0 0 1-2.4-1.5 9 9 0 0 1-1.65-2.05c-.15-.3 0-.45.15-.6l.45-.55c.15-.2.2-.3.3-.5s.05-.4 0-.55-.65-1.6-.9-2.15c-.25-.55-.5-.45-.65-.45l-.55-.05a1.05 1.05 0 0 0-.75.35 3.15 3.15 0 0 0-1 2.35c0 1.4 1 2.7 1.15 2.9s2 3.05 4.85 4.25c2.8 1.2 2.8.8 3.3.75s1.7-.7 1.95-1.35.25-1.25.2-1.35-.3-.2-.6-.35Z"/></svg>
+        ${WA_DISPLAY}
+      </a>
+    </div>
     <div class="right">
       <div class="icons">
         <a class="cart" href="acheter.html" aria-label="Panier">
