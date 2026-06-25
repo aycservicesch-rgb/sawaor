@@ -1,8 +1,8 @@
 /* ============================================================
    SAWA OR — Lógica común
    ============================================================ */
-const TEL="+41 (0)22 362 01 01";
-const TEL_RAW="41223620101";
+const WA_RAW="595995367517";              // WhatsApp (sin + ni espacios)
+const WA_DISPLAY="+595 995 367 517";
 const EMAIL="contact@sawaor.ch";
 
 /* ---- Iconos SVG inline ---- */
@@ -60,7 +60,7 @@ function buildHeader(active){
   const top=`
   <div class="topbar"><div class="container">
     <div class="socials">${socialLinks('')}</div>
-    <a class="tel" href="tel:${TEL_RAW}">${TEL}</a>
+    <a class="tel" href="mailto:${EMAIL}">${EMAIL}</a>
     <div class="right">
       <div class="icons">
         <a class="cart" href="acheter.html" aria-label="Panier">
@@ -122,7 +122,7 @@ function buildFooter(){
       <h2><span class="num" data-i18n="bq.count">44 BOUTIQUES</span></h2>
       <div class="sub" data-i18n="bq.map">Localisation Google Map</div>
       <div class="contact-h" data-i18n="bq.contact">N'hésitez pas à nous contacter</div>
-      <div class="contact-row"><a href="tel:${TEL_RAW}">${TEL}</a><a href="mailto:${EMAIL}">${EMAIL}</a></div>
+      <div class="contact-row"><a href="mailto:${EMAIL}">${EMAIL}</a><a href="https://wa.me/${WA_RAW}" target="_blank" rel="noopener">WhatsApp ${WA_DISPLAY}</a></div>
       <div class="socials-h" data-i18n="bq.social">Nous sommes sur les médias sociaux</div>
       <div class="socials">${socialLinks('')}</div>
     </div>
@@ -164,7 +164,7 @@ function buildFooter(){
   </div></footer>
 
   <button class="to-top" id="toTop" aria-label="Haut">↑</button>
-  <a class="wa" href="https://wa.me/${TEL_RAW}" target="_blank" rel="noopener" aria-label="WhatsApp">${ICON.wa}</a>`;
+  <a class="wa" href="https://wa.me/${WA_RAW}" target="_blank" rel="noopener" aria-label="WhatsApp">${ICON.wa}</a>`;
 }
 
 /* ---- Mapa de Suiza (silueta simplificada con pines) ---- */
@@ -244,27 +244,8 @@ function cityFrom(cityStr){
 }
 function renderCoverage(){
   const seen=new Set(), cities=[];
-  BOUTIQUES.forEach(b=>{const c=cityFrom(b[2]); if(c && !seen.has(c)){seen.add(c); cities.push(c);}});
+  BOUTIQUES.forEach(b=>{const c=cityFrom(b[1]); if(c && !seen.has(c)){seen.add(c); cities.push(c);}});
   return cities.map(c=>`<span class="city-chip">${c}</span>`).join('');
-}
-function renderBoutiques(){
-  const t=(localStorage.getItem("helvor_lang")||"fr");
-  const locTxt=(I18N[t]&&I18N[t]["bq.loc"])||"Localisation";
-  const soonTxt=(I18N[t]&&I18N[t]["bq.soon"])||"Ouverture prochaine";
-  return BOUTIQUES.map(([name,addr,city,tel])=>{
-    const maps=`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name+' '+addr+' '+city)}`;
-    const telBlock = tel
-      ? `<a class="tel" href="tel:${tel.replace(/[^0-9+]/g,'')}">${tel}</a>`
-      : `<div class="soon">${soonTxt}</div>`;
-    return `<div class="boutique">
-      <h3>${name}</h3>
-      <div class="addr">${addr}</div>
-      <div class="addr">${city}</div>
-      ${telBlock}
-      <hr>
-      <a class="loc" href="${maps}" target="_blank" rel="noopener">${locTxt}</a>
-    </div>`;
-  }).join('');
 }
 
 /* ---- Interacciones comunes ---- */

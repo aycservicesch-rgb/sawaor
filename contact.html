@@ -31,15 +31,14 @@
     <div class="contact-info">
       <div class="eyebrow" data-i18n="bq.contact">N'hésitez pas à nous contacter</div>
       <h2 class="section-title" style="font-size:38px">SAWA OR</h2>
-      <p class="big" id="cTel">+41 (0)22 362 01 01</p>
-      <p id="cMail">contact@sawaor.ch</p>
-      <p>Rue de la Gare 39<br>CH-1260 Nyon — Suisse</p>
+      <p class="big" id="cMail">contact@sawaor.ch</p>
+      <p id="cWa"><a href="https://wa.me/595995367517" target="_blank" rel="noopener">WhatsApp +595 995 367 517</a></p>
+      <p data-i18n="bq.cov.title" style="color:var(--grey)">Présents dans toute la Suisse</p>
       <div class="socials map-grid" style="display:flex;gap:14px;margin-top:10px" id="cSocials"></div>
     </div>
     <form class="contact-form" onsubmit="event.preventDefault();this.reset();alert((typeof I18N!=='undefined'&&I18N[curLang()]&&I18N[curLang()]['contact.sent'])||'Merci !');">
       <label data-i18n="contact.name">Nom</label><input required type="text">
       <label data-i18n="contact.email">Email</label><input required type="email">
-      <label data-i18n="contact.phone">Téléphone</label><input type="tel">
       <label data-i18n="contact.message">Message</label><textarea rows="5" required></textarea>
       <button class="btn btn-gold" type="submit" data-i18n="contact.send" style="margin-top:18px;width:100%;justify-content:center">Envoyer</button>
     </form>
@@ -54,7 +53,6 @@
 <script>
   document.getElementById('header').innerHTML=buildHeader('contact');
   document.getElementById('footer').innerHTML=buildFooter();
-  document.getElementById('cTel').innerHTML='<a href="tel:'+TEL_RAW+'">'+TEL+'</a>';
   document.getElementById('cMail').innerHTML='<a href="mailto:'+EMAIL+'">'+EMAIL+'</a>';
   document.getElementById('cSocials').innerHTML=socialLinks('');
   initCommon();
