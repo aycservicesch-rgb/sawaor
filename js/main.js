@@ -90,7 +90,7 @@ function buildHeader(active){
   const nav=`
   <header class="site-header"><div class="container">
     <a class="logo" href="index.html">
-      <span class="name">SAWA OR</span>
+      <span class="name">SAWAOR-ERICK-AYC-ALADJI</span>
       <span class="flag" aria-hidden="true" title="Suisse"></span><span class="flag-cm" aria-hidden="true" title="Cameroun"></span>
     </a>
     <nav class="main-nav"><ul>
@@ -137,7 +137,7 @@ function buildFooter(){
 
   <footer class="site-footer"><div class="container">
     <div class="footer-grid">
-      <div class="brand logo"><span class="name">SAWA OR</span><span class="flag"></span><span class="flag-cm"></span></div>
+      <div class="brand logo"><span class="name">SAWAOR-ERICK-AYC-ALADJI</span><span class="flag"></span><span class="flag-cm"></span></div>
       <div class="footer-col">
         <a href="index.html" data-i18n="nav.home">Accueil</a>
         <a href="cours.html" data-i18n="nav.cours">Cours de l'or</a>
@@ -185,7 +185,7 @@ const CH_MAP_SVG=`
      [350,140],[300,210],[260,235],[330,180],[400,150],[420,200],[470,160],[460,200],[520,150],
      [490,230],[440,240],[380,220],[200,200],[170,210],[240,190],[280,190],[150,200]]
     .map(([x,y])=>`<g transform="translate(${x},${y})"><path d="M0 0c-7 0-12 5-12 12 0 8 12 20 12 20s12-12 12-20c0-7-5-12-12-12Z" fill="#C9A24B"/><circle cy="11" r="4" fill="#0a0a0a"/></g>`).join('')}
-  <text x="370" y="300" fill="rgba(201,162,75,.5)" font-size="30" font-weight="800" font-family="Montserrat,sans-serif">SAWA OR</text>
+  <text x="300" y="300" fill="rgba(201,162,75,.45)" font-size="20" font-weight="800" font-family="Montserrat,sans-serif">SAWAOR-ERICK-AYC-ALADJI</text>
 </svg>`;
 
 /* ---- Chart de líneas suave (SVG) ---- */

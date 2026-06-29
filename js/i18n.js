@@ -1,5 +1,5 @@
 /* ============================================================
-   SAWAOR · ERICK · AYC — Collaboration internationale
+   SAWAOR · ERICK · AYC · ALADJI — Collaboration internationale
    Multiidioma FR / DE / IT / EN / ES — Achat & vente d'OR
    ============================================================ */
 const I18N = {
@@ -38,7 +38,7 @@ const I18N = {
     "bq.contact":"N'hésitez pas à nous contacter","bq.social":"Nous sommes sur les médias sociaux","bq.loc":"Localisation","bq.soon":"Ouverture prochaine",
     "bq.cov.title":"Présents dans toute la Suisse","bq.cov.sub":"Un réseau d'achat et de vente d'or présent dans tous les cantons — d'un lac à l'autre, du Léman au Tessin.","bq.cov.cities":"Villes & régions couvertes",
     "foot.rights":"© 2026 SAWA OR Sàrl — CH-1260 Nyon",
-    "foot.design":"SAWAOR · ERICK · AYC — Collaboration internationale",
+    "foot.design":"SAWAOR · ERICK · AYC · ALADJI — Collaboration internationale",
     "follow.title":"Suivez le cours de l'or sur votre réseau préféré",
     "best.title":"Nous achetons au meilleur prix tout votre or",
     "best.tag":"Rapidité · Efficacité · Discrétion — Vendez votre or simplement",
@@ -87,7 +87,7 @@ const I18N = {
     "bq.contact":"Kontaktieren Sie uns gerne","bq.social":"Folgen Sie uns in den sozialen Medien","bq.loc":"Standort","bq.soon":"Demnächst",
     "bq.cov.title":"In der ganzen Schweiz präsent","bq.cov.sub":"Ein Gold-Ankaufs- und Verkaufsnetz in allen Kantonen — von einem See zum anderen, vom Genfersee bis ins Tessin.","bq.cov.cities":"Abgedeckte Städte & Regionen",
     "foot.rights":"© 2026 SAWA OR GmbH — CH-1260 Nyon",
-    "foot.design":"SAWAOR · ERICK · AYC — Internationale Zusammenarbeit",
+    "foot.design":"SAWAOR · ERICK · AYC · ALADJI — Internationale Zusammenarbeit",
     "follow.title":"Verfolgen Sie den Goldkurs in Ihrem Lieblingsnetzwerk",
     "best.title":"Wir kaufen Ihr gesamtes Gold zum besten Preis",
     "best.tag":"Schnelligkeit · Effizienz · Diskretion — Verkaufen Sie Ihr Gold einfach",
@@ -136,7 +136,7 @@ const I18N = {
     "bq.contact":"Non esitate a contattarci","bq.social":"Siamo sui social media","bq.loc":"Posizione","bq.soon":"Prossima apertura",
     "bq.cov.title":"Presenti in tutta la Svizzera","bq.cov.sub":"Una rete di acquisto e vendita d'oro presente in tutti i cantoni — da un lago all'altro, da Ginevra al Ticino.","bq.cov.cities":"Città e regioni coperte",
     "foot.rights":"© 2026 SAWA OR Sàrl — CH-1260 Nyon",
-    "foot.design":"SAWAOR · ERICK · AYC — Collaborazione internazionale",
+    "foot.design":"SAWAOR · ERICK · AYC · ALADJI — Collaborazione internazionale",
     "follow.title":"Segui la quotazione dell'oro sul tuo social preferito",
     "best.title":"Compriamo al miglior prezzo tutto il tuo oro",
     "best.tag":"Rapidità · Efficienza · Discrezione — Vendi il tuo oro in modo semplice",
@@ -185,7 +185,7 @@ const I18N = {
     "bq.contact":"Feel free to contact us","bq.social":"Find us on social media","bq.loc":"Location","bq.soon":"Opening soon",
     "bq.cov.title":"Present across all of Switzerland","bq.cov.sub":"A gold buying and selling network present in every canton — from one lake to another, from Geneva to Ticino.","bq.cov.cities":"Cities & regions covered",
     "foot.rights":"© 2026 SAWA OR Sàrl — CH-1260 Nyon",
-    "foot.design":"SAWAOR · ERICK · AYC — International collaboration",
+    "foot.design":"SAWAOR · ERICK · AYC · ALADJI — International collaboration",
     "follow.title":"Follow the gold price on your favourite network",
     "best.title":"We buy all your gold at the best price",
     "best.tag":"Speed · Efficiency · Discretion — Sell your gold simply",
@@ -234,7 +234,7 @@ const I18N = {
     "bq.contact":"No dude en contactarnos","bq.social":"Estamos en las redes sociales","bq.loc":"Ubicación","bq.soon":"Próxima apertura",
     "bq.cov.title":"Presentes en toda Suiza","bq.cov.sub":"Una red de compra y venta de oro presente en todos los cantones — de un lago a otro, del Lemán al Tesino.","bq.cov.cities":"Ciudades y regiones cubiertas",
     "foot.rights":"© 2026 SAWA OR Sàrl — CH-1260 Nyon",
-    "foot.design":"SAWAOR · ERICK · AYC — Colaboración internacional",
+    "foot.design":"SAWAOR · ERICK · AYC · ALADJI — Colaboración internacional",
     "follow.title":"Siga la cotización del oro en su red preferida",
     "best.title":"Compramos al mejor precio todo su oro",
     "best.tag":"Rapidez · Eficacia · Discreción — Venda su oro de forma sencilla",

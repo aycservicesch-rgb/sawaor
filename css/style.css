@@ -100,9 +100,9 @@ ul{list-style:none}
   display:flex;align-items:center;justify-content:space-between;
   height:var(--header-h);gap:24px;
 }
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:2px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:1px;flex:none}
 .logo .name{
-  font-size:30px;
+  font-size:clamp(13px,1.6vw,20px);letter-spacing:.3px;white-space:nowrap;
   background:linear-gradient(180deg,#F7E7A6 0%,#E9CE84 35%,#C9A24B 60%,#7d5f28 100%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   text-shadow:0 1px 0 rgba(0,0,0,.4);
@@ -533,7 +533,7 @@ section{position:relative}
 @media(max-width:520px){
   .topbar-contact .tel:not(.wa-top){display:none} /* deja solo WhatsApp arriba en móvil */
   .topbar .wa-top{font-size:13px}
-  .logo .name{font-size:24px}
+  .logo .name{font-size:13px}
   .products{grid-template-columns:1fr 1fr}
   .boutiques-grid{grid-template-columns:1fr}
   .footer-grid{grid-template-columns:1fr}
