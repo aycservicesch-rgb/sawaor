@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Acheter de l'or en ligne — SAWA OR</title>
-<meta name="description" content="Achetez lingots, pièces et bijoux en or et argent certifiés. Livraison sécurisée en Suisse.">
+<title>Acheter de l'or en ligne — SAWAOR-ERICK-AYC</title>
+<meta name="description" content="Achetez lingots et pièces d'or certifiés. Livraison sécurisée en Suisse.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -34,9 +34,6 @@
     <h2 class="section-title" id="monnaies" data-i18n="nav.coins" style="font-size:34px;margin-top:60px">Monnaies</h2>
     <div class="products" id="coinsGrid"></div>
 
-    <h2 class="section-title" data-i18n="cat.bijou.t" style="font-size:34px;margin-top:60px">Bijouterie</h2>
-    <div class="products" id="bijouGrid"></div>
-
     <div class="info-blocks">
       <div class="info-block"><h3 data-i18n="shop.ship.t">Expédition sécurisée</h3><p data-i18n="shop.ship.p"></p></div>
       <div class="info-block"><h3 data-i18n="shop.conf.t">Conformité &amp; transparence</h3><p data-i18n="shop.conf.p"></p></div>
@@ -57,7 +54,6 @@
   function paintShop(){
     document.getElementById('lingotsGrid').innerHTML=renderProducts(['lingot']);
     document.getElementById('coinsGrid').innerHTML=renderProducts(['piece']);
-    document.getElementById('bijouGrid').innerHTML=renderProducts(['bijou']);
     applyLang(curLang()); // traduce los botones "Plus d'info" recién creados
   }
   paintShop();

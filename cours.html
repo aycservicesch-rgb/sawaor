@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cours de l'or — SAWA OR</title>
-<meta name="description" content="Cours de l'or du jour en Suisse — or 24 et 18 carats, argent. SAWA OR achète cash.">
+<title>Cours de l'or — SAWAOR-ERICK-AYC</title>
+<meta name="description" content="Cours de l'or du jour en Suisse — or 24 et 18 carats. SAWAOR-ERICK-AYC achète cash.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -104,7 +104,7 @@
   }
   function draw(){
     document.getElementById('charts').innerHTML=
-      chartCard(COURS.or24kg,1)+chartCard(COURS.or24gr,2)+chartCard(COURS.or18gr,3)+chartCard(COURS.argent,4);
+      chartCard(COURS.or24kg,1)+chartCard(COURS.or24gr,2)+chartCard(COURS.or18kg,3)+chartCard(COURS.or18gr,4);
   }
   draw();
   // El selector reescala visualmente la serie (demostración)
@@ -120,10 +120,10 @@
     // Anclar las series históricas al valor en vivo (conserva la tendencia)
     COURS.or24kg.series=anchorSeries(COURS.or24kg.series,live.or24kg);
     COURS.or24gr.series=anchorSeries(COURS.or24gr.series,live.or24gr);
+    COURS.or18kg.series=anchorSeries(COURS.or18kg.series,live.or18kg);
     COURS.or18gr.series=anchorSeries(COURS.or18gr.series,live.or18gr);
-    COURS.argent.series=anchorSeries(COURS.argent.series,live.argent);
     COURS.or24kg.value=live.or24kg; COURS.or24gr.value=live.or24gr;
-    COURS.or18gr.value=live.or18gr; COURS.argent.value=live.argent;
+    COURS.or18kg.value=live.or18kg; COURS.or18gr.value=live.or18gr;
     if(live.date) COURS.date=live.date;
     document.getElementById('coursDate').textContent=COURS.date;
     badge.classList.add('on');

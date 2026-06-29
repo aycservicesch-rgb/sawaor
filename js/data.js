@@ -8,8 +8,8 @@ const COURS = {
   date: "2026-06-24",
   or24kg:  { label: {fr:"OR 1000/24 CARATS",en:"GOLD 1000/24 CARAT",de:"GOLD 1000/24 KARAT",it:"ORO 1000/24 CARATI",es:"ORO 1000/24 QUILATES"}, unit: "Frs / kg", value: 106662, series:[110050,107500,104200,104900,106900,105200,106662] },
   or24gr:  { label: {fr:"OR 1000/24 CARATS",en:"GOLD 1000/24 CARAT",de:"GOLD 1000/24 KARAT",it:"ORO 1000/24 CARATI",es:"ORO 1000/24 QUILATES"}, unit: "Frs / gr", value: 106.66, series:[110.05,107.5,104.2,104.9,106.9,105.2,106.66] },
-  or18gr:  { label: {fr:"OR 750/18 CARATS",en:"GOLD 750/18 CARAT",de:"GOLD 750/18 KARAT",it:"ORO 750/18 CARATI",es:"ORO 750/18 QUILATES"},  unit: "Frs / gr", value: 73,     series:[75.5,72,69.5,70,77,72.5,73] },
-  argent:  { label: {fr:"ARGENT 1000",en:"SILVER 1000",de:"SILBER 1000",it:"ARGENTO 1000",es:"PLATA 1000"},       unit: "Frs / kg", value: 1612,   series:[1783,1700,1640,1660,1720,1650,1612], silver:true }
+  or18kg:  { label: {fr:"OR 750/18 CARATS",en:"GOLD 750/18 CARAT",de:"GOLD 750/18 KARAT",it:"ORO 750/18 CARATI",es:"ORO 750/18 QUILATES"},  unit: "Frs / kg", value: 73000,  series:[75500,72000,69500,70000,77000,72500,73000] },
+  or18gr:  { label: {fr:"OR 750/18 CARATS",en:"GOLD 750/18 CARAT",de:"GOLD 750/18 KARAT",it:"ORO 750/18 CARATI",es:"ORO 750/18 QUILATES"},  unit: "Frs / gr", value: 73,     series:[75.5,72,69.5,70,77,72.5,73] }
 };
 const COURS_DAYS = ["17.06","18.06","19.06","20.06","21.06","22.06","23.06","24.06"];
 
@@ -22,7 +22,6 @@ const PRODUCTS = [
   { ico:"🥇", name:{fr:"Lingot 5g d'or fin",en:"5g fine gold bar",de:"Feingoldbarren 5g",it:"Lingotto 5g oro fino",es:"Lingote 5g oro fino"},   spec:"5 g / 999,9",   price:"CHF 613.31",    cat:"lingot" },
   { ico:"🥇", name:{fr:"Lingot 2g d'or fin",en:"2g fine gold bar",de:"Feingoldbarren 2g",it:"Lingotto 2g oro fino",es:"Lingote 2g oro fino"},   spec:"2 g / 999,9",   price:"CHF 253.86",    cat:"lingot" },
   { ico:"🥇", name:{fr:"Lingot 1g d'or fin",en:"1g fine gold bar",de:"Feingoldbarren 1g",it:"Lingotto 1g oro fino",es:"Lingote 1g oro fino"},   spec:"1 g / 999,9",   price:"CHF 132.26",    cat:"lingot" },
-  { ico:"⬜", name:{fr:"Lingot d'argent 1000 g",en:"1000g silver bar",de:"Silberbarren 1000 g",it:"Lingotto d'argento 1000 g",es:"Lingote de plata 1000 g"}, spec:"1000 g / 999", price:"CHF 1'902.16", cat:"lingot" },
   { ico:"🪙", name:"10 Francs Vreneli",   spec:"2.90 g / 900 / Ø19 mm",  price:"CHF 448.51", cat:"piece" },
   { ico:"🪙", name:"20 Francs Vreneli",   spec:"5.80 g / 900 / Ø21 mm",  price:"CHF 680.50", cat:"piece" },
   { ico:"🪙", name:"Napoléon 20 Frs",     spec:"5.80 g / 900 / Ø21 mm",  price:"CHF 680.50", cat:"piece" },
@@ -30,12 +29,7 @@ const PRODUCTS = [
   { ico:"🪙", name:"Maple Leaf",          spec:"31.10 g / 999 / Ø30 mm", price:"CHF 3'648.91", cat:"piece" },
   { ico:"🪙", name:"American Eagle",      spec:"31.10 g / 916 / Ø34.2 mm", price:"CHF 3'648.91", cat:"piece" },
   { ico:"🪙", name:"50 Pesos",            spec:"37.50 g / 900 / Ø37 mm", price:"CHF 4'399.81", cat:"piece" },
-  { ico:"🪙", name:"Krugerrand",          spec:"31.10 g / 916 / Ø32 mm", price:"CHF 3'648.91", cat:"piece" },
-  /* Bijouterie */
-  { ico:"💍", name:{fr:"Bague or 18k diamant",en:"18k gold diamond ring",de:"Diamantring Gold 18k",it:"Anello oro 18k diamante",es:"Anillo oro 18k diamante"}, spec:{fr:"Or 750/18k · serti diamant",en:"Gold 750/18k · diamond set",de:"Gold 750/18k · Diamantbesatz",it:"Oro 750/18k · con diamante",es:"Oro 750/18k · engaste diamante"}, price:"CHF 1'290.00", cat:"bijou" },
-  { ico:"📿", name:{fr:"Collier maille or 18k",en:"18k gold chain necklace",de:"Goldkette 18k",it:"Collana oro 18k",es:"Collar oro 18k"}, spec:{fr:"Or 750/18k · 45 cm",en:"Gold 750/18k · 45 cm",de:"Gold 750/18k · 45 cm",it:"Oro 750/18k · 45 cm",es:"Oro 750/18k · 45 cm"},         price:"CHF 980.00",   cat:"bijou" },
-  { ico:"⌚", name:{fr:"Montre or & acier",en:"Gold & steel watch",de:"Uhr Gold & Stahl",it:"Orologio oro & acciaio",es:"Reloj oro y acero"},     spec:{fr:"Boîtier or 18k · automatique",en:"18k gold case · automatic",de:"Gehäuse Gold 18k · Automatik",it:"Cassa oro 18k · automatico",es:"Caja oro 18k · automático"}, price:"CHF 4'500.00", cat:"bijou" },
-  { ico:"💎", name:{fr:"Boucles d'oreilles diamant",en:"Diamond earrings",de:"Diamant-Ohrringe",it:"Orecchini diamante",es:"Pendientes diamante"}, spec:{fr:"Or 750/18k · 0.50 ct",en:"Gold 750/18k · 0.50 ct",de:"Gold 750/18k · 0.50 ct",it:"Oro 750/18k · 0.50 ct",es:"Oro 750/18k · 0.50 ct"}, price:"CHF 1'750.00", cat:"bijou" }
+  { ico:"🪙", name:"Krugerrand",          spec:"31.10 g / 916 / Ø32 mm", price:"CHF 3'648.91", cat:"piece" }
 ];
 
 /* --- BOUTIQUES (44) — rebrandeadas SAWA OR --- */

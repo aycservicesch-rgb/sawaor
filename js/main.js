@@ -111,8 +111,8 @@ function buildHeader(active){
       <a href="boutiques.html" data-i18n="nav.boutiques">Nos boutiques</a>
       <a href="acheter.html#lingots" data-i18n="nav.lingots">Lingots</a>
       <a href="acheter.html#monnaies" data-i18n="nav.coins">Monnaies</a>
-      <a href="index.html#services" data-i18n="nav.bijou">Bijouterie</a>
-      <a href="index.html#services" data-i18n="nav.silver">Achat argent</a>
+      <a href="index.html#services" data-i18n="nav.gold">Achat d'or</a>
+      <a href="acheter.html" data-i18n="nav.sell">Vente d'or</a>
       <a href="index.html#steps" data-i18n="nav.expertise">Expertise</a>
       <a href="contact.html" data-i18n="nav.contact">Contact</a>
     </nav>
@@ -146,8 +146,8 @@ function buildFooter(){
       </div>
       <div class="footer-col">
         <a href="index.html#services" data-i18n="nav.gold">Achat d'or</a>
-        <a href="index.html#services" data-i18n="nav.silver">Achat argent</a>
-        <a href="index.html#services" data-i18n="nav.bijou">Bijouterie</a>
+        <a href="acheter.html" data-i18n="nav.sell">Vente d'or</a>
+        <a href="cours.html" data-i18n="nav.cours">Cours de l'or</a>
         <a href="acheter.html#lingots" data-i18n="nav.lingots">Lingots</a>
       </div>
       <div class="footer-col">
