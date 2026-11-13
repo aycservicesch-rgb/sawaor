@@ -1,0 +1,710 @@
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Campo Abierto</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Campo Abierto: el fútbol en 3D. Medidas reglamentarias, pizarra táctica interactiva e historia del juego.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: estadio de noche. Héroe 3D a sangre, luego bandas alternas "césped" y "grada" con contenido centrado a 1180px. */
+:root {
+  --night: #0a1612;        /* cielo / grada */
+  --turf: #12261d;         /* banda de césped oscuro */
+  --turf-line: #1f3b2e;    /* bordes sutiles */
+  --chalk: #eef1e8;        /* cal de las líneas */
+  --chalk-dim: #a9b6ab;    /* texto secundario */
+  --flood: #f4c45a;        /* luz de foco, acento */
+  --flood-ink: #1a1405;    /* texto sobre acento */
+  --f-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --f-body: "Barlow", "Helvetica Neue", Arial, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --wrap: 1180px;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--chalk);
+  font-family: var(--f-body);
+  font-size: 17px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  margin: 0;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--night); }
+.wrap {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: .92; letter-spacing: .005em; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--flood); outline-offset: 3px; }
+.eyebrow {
+  font-family: var(--f-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--flood);
+}
+
+/* ---------- Nav ---------- */
+.nav {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+  background: color-mix(in srgb, var(--night) 82%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--turf-line);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.brand { font-family: var(--f-display); font-weight: 900; font-size: 24px; letter-spacing: .04em; text-transform: uppercase; text-decoration: none; white-space: nowrap; display: flex; align-items: center; gap: 10px; }
+.brand i { width: 14px; height: 14px; border-radius: 50%; background: var(--flood); box-shadow: 0 0 14px var(--flood); display: inline-block; }
+.nav ul { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; flex-wrap: wrap; }
+.nav ul a { text-decoration: none; font-weight: 600; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--chalk-dim); }
+.nav ul a:hover { color: var(--chalk); }
+@media (max-width: 640px) { .brand { font-size: 20px; } .nav ul { gap: 14px; } .nav ul li:nth-child(n+3) { display: none; } }
+
+/* ---------- Hero ---------- */
+.hero { position: relative; min-height: clamp(560px, 88vh, 880px); display: grid; align-items: end; overflow: hidden; isolation: isolate; }
+#hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; display: block; cursor: pointer; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, transparent 45%, color-mix(in srgb, var(--night) 92%, transparent) 100%); }
+.hero .wrap { width: 100%; padding-block: 48px 56px; display: grid; gap: 22px; pointer-events: none; }
+.hero h1 { font-size: clamp(64px, 13vw, 184px); font-weight: 900; text-transform: uppercase; }
+.hero h1 span { color: var(--flood); display: block; }
+.hero-row { display: flex; flex-wrap: wrap; gap: 24px 48px; align-items: end; justify-content: space-between; }
+.hero-lede { max-width: 46ch; font-size: 19px; color: var(--chalk-dim); }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; pointer-events: auto; }
+.btn {
+  font: 600 15px/1 var(--f-body); letter-spacing: .06em; text-transform: uppercase; text-decoration: none;
+  padding: 15px 22px; border-radius: 2px; border: 1px solid var(--chalk); color: var(--chalk); background: transparent; cursor: pointer;
+  transition: background .2s, color .2s;
+}
+.btn:hover { background: var(--chalk); color: var(--night); }
+.btn.primary { background: var(--flood); border-color: var(--flood); color: var(--flood-ink); }
+.btn.primary:hover { background: var(--chalk); border-color: var(--chalk); }
+.hint { font-family: var(--f-mono); font-size: 12px; color: var(--chalk-dim); letter-spacing: .06em; }
+
+/* ---------- Scoreboard strip ---------- */
+.board { background: var(--flood); color: var(--flood-ink); }
+.board .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; padding-block: 0; }
+.board .wrap > div { padding: 22px 18px; border-left: 1px solid color-mix(in srgb, var(--flood-ink) 22%, transparent); }
+.board .wrap > div:first-child { border-left: 0; padding-left: 0; }
+.board b { display: block; font-family: var(--f-display); font-weight: 900; font-size: clamp(34px, 5vw, 52px); line-height: 1; font-variant-numeric: tabular-nums; }
+.board small { font-family: var(--f-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+@media (max-width: 720px) {
+  .board .wrap { grid-template-columns: repeat(2, 1fr); }
+  .board .wrap > div:nth-child(3) { border-left: 0; padding-left: 0; }
+  .board .wrap > div:nth-child(n+3) { border-top: 1px solid color-mix(in srgb, var(--flood-ink) 22%, transparent); }
+}
+
+/* ---------- Sections ---------- */
+section.band { padding-block: clamp(64px, 9vw, 120px); }
+section.turf { background: var(--turf); }
+.sec-head { display: grid; gap: 14px; margin-bottom: 44px; max-width: 760px; }
+.sec-head h2 { font-size: clamp(44px, 7vw, 88px); font-weight: 900; text-transform: uppercase; }
+.sec-head p { color: var(--chalk-dim); max-width: 62ch; }
+
+/* Medidas */
+.measures { display: grid; grid-template-columns: 1.25fr 1fr; gap: 48px; align-items: center; }
+.measures svg { width: 100%; height: auto; display: block; }
+.spec { list-style: none; margin: 0; padding: 0; display: grid; }
+.spec li { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--turf-line); align-items: baseline; }
+.spec li:first-child { border-top: 1px solid var(--turf-line); }
+.spec span { color: var(--chalk-dim); }
+.spec b { font-family: var(--f-mono); font-weight: 500; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.footnote { font-family: var(--f-mono); font-size: 12px; color: var(--chalk-dim); margin-top: 16px; }
+@media (max-width: 860px) { .measures { grid-template-columns: 1fr; } }
+
+/* Pizarra */
+.board3d { display: grid; grid-template-columns: 280px 1fr; gap: 28px; align-items: stretch; }
+.tabs { display: grid; gap: 8px; align-content: start; }
+.tab {
+  text-align: left; background: transparent; border: 1px solid var(--turf-line); color: var(--chalk);
+  padding: 14px 16px; border-radius: 2px; cursor: pointer; display: grid; gap: 2px; font: inherit;
+  transition: border-color .2s, background .2s;
+}
+.tab b { font-family: var(--f-display); font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: .02em; }
+.tab small { color: var(--chalk-dim); font-size: 13px; }
+.tab:hover { border-color: var(--chalk-dim); }
+.tab[aria-pressed="true"] { border-color: var(--flood); background: color-mix(in srgb, var(--flood) 10%, transparent); }
+.tab[aria-pressed="true"] b { color: var(--flood); }
+.stage { position: relative; min-width: 0; border: 1px solid var(--turf-line); background: var(--night); aspect-ratio: 16 / 10; max-width: 100%; }
+#tactics-canvas { width: 100%; height: 100%; display: block; cursor: grab; touch-action: pan-y; }
+#tactics-canvas:active { cursor: grabbing; }
+.stage-note { position: absolute; left: 14px; right: 14px; bottom: 12px; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; pointer-events: none; }
+.stage-note p { background: color-mix(in srgb, var(--night) 80%, transparent); padding: 8px 12px; font-size: 14px; max-width: 52ch; }
+.stage-note .hint { align-self: end; background: color-mix(in srgb, var(--night) 80%, transparent); padding: 6px 10px; }
+@media (max-width: 860px) {
+  .board3d { grid-template-columns: 1fr; }
+  .tabs { grid-template-columns: repeat(2, 1fr); }
+  .stage { aspect-ratio: 4 / 5; }
+  .stage-note p { font-size: 13px; }
+}
+
+/* Historia */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px 0; }
+.timeline li { padding: 22px 22px 0 0; border-top: 2px solid var(--chalk); position: relative; display: grid; gap: 8px; align-content: start; }
+.timeline li::before { content: ""; position: absolute; top: -7px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--night); border: 2px solid var(--chalk); }
+.timeline li.key::before { background: var(--flood); border-color: var(--flood); }
+.timeline time { font-family: var(--f-display); font-weight: 900; font-size: 46px; line-height: 1; font-variant-numeric: tabular-nums; }
+.timeline h3 { font-family: var(--f-body); font-weight: 600; font-size: 17px; line-height: 1.3; letter-spacing: 0; }
+.timeline p { color: var(--chalk-dim); font-size: 15px; }
+@media (max-width: 960px) { .timeline { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px) { .timeline { grid-template-columns: 1fr; gap: 0; border-left: 2px solid var(--chalk); }
+  .timeline li { padding: 0 0 26px 24px; border-top: 0; } .timeline li::before { top: 8px; left: -7px; } }
+
+/* Mundial 2026 */
+.wc { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.wc h2 { font-size: clamp(54px, 9vw, 124px); font-weight: 900; text-transform: uppercase; }
+.wc h2 em { font-style: normal; color: var(--flood); }
+.hosts { display: grid; gap: 0; }
+.hosts div { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--turf-line); align-items: baseline; }
+.hosts div:first-child { border-top: 1px solid var(--turf-line); }
+.hosts strong { font-family: var(--f-display); font-size: 34px; font-weight: 800; text-transform: uppercase; line-height: 1; }
+.hosts span { font-family: var(--f-mono); font-size: 13px; color: var(--chalk-dim); text-align: right; }
+@media (max-width: 860px) { .wc { grid-template-columns: 1fr; } }
+
+/* Footer */
+footer { border-top: 1px solid var(--turf-line); }
+footer .wrap { padding-block: 32px; display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; color: var(--chalk-dim); font-size: 14px; }
+
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+</head><body>
+
+<nav class="nav" aria-label="Principal">
+  <div class="wrap">
+    <a class="brand" href="#inicio"><i aria-hidden="true"></i>Campo Abierto</a>
+    <ul>
+      <li><a href="#medidas">Medidas</a></li>
+      <li><a href="#pizarra">Pizarra 3D</a></li>
+      <li><a href="#historia">Historia</a></li>
+      <li><a href="#mundial">Mundial 2026</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <canvas id="hero-canvas" aria-label="Balón de fútbol en 3D sobre un campo iluminado por focos. Pulsa para chutarlo."></canvas>
+  <div class="wrap">
+    <p class="eyebrow">Fútbol · 105 × 68 m · 90 minutos</p>
+    <h1>El juego<span>más grande</span></h1>
+    <div class="hero-row">
+      <p class="hero-lede">Once contra once, un balón y una portería de 7,32 metros. Recorre el campo en tres dimensiones, prueba sistemas tácticos y repasa los momentos que definieron el deporte.</p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#pizarra">Abrir la pizarra</a>
+        <a class="btn" href="#medidas">Ver medidas</a>
+      </div>
+    </div>
+    <p class="hint">Pulsa el balón para chutarlo · mueve el cursor para cambiar el ángulo</p>
+  </div>
+</header>
+
+<div class="board" role="list" aria-label="El fútbol en cifras">
+  <div class="wrap">
+    <div role="listitem"><b>11</b><small>Jugadores por equipo</small></div>
+    <div role="listitem"><b>211</b><small>Federaciones en la FIFA</small></div>
+    <div role="listitem"><b>48</b><small>Selecciones en 2026</small></div>
+    <div role="listitem"><b>1863</b><small>Primeras reglas escritas</small></div>
+  </div>
+</div>
+
+<section class="band turf" id="medidas">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Reglas de Juego · IFAB</p>
+      <h2>Medidas del terreno</h2>
+      <p>Las cifras que fija el reglamento para partidos internacionales. Cada línea tiene un propósito: desde los 9,15 m del círculo central hasta el punto penal a 11 m de la portería.</p>
+    </div>
+    <div class="measures">
+      <svg viewBox="-6 -6 117 80" role="img" aria-label="Diagrama del campo con sus medidas">
+        <defs>
+          <pattern id="stripes" width="10.5" height="68" patternUnits="userSpaceOnUse">
+            <rect width="5.25" height="68" fill="#1d4a30"/><rect x="5.25" width="5.25" height="68" fill="#1a432b"/>
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width="105" height="68" fill="url(#stripes)"/>
+        <g fill="none" stroke="#eef1e8" stroke-width=".35">
+          <rect x="0" y="0" width="105" height="68"/>
+          <line x1="52.5" y1="0" x2="52.5" y2="68"/>
+          <circle cx="52.5" cy="34" r="9.15"/>
+          <rect x="0" y="13.84" width="16.5" height="40.32"/>
+          <rect x="88.5" y="13.84" width="16.5" height="40.32"/>
+          <rect x="0" y="24.84" width="5.5" height="18.32"/>
+          <rect x="99.5" y="24.84" width="5.5" height="18.32"/>
+          <path d="M16.5 26.69 A9.15 9.15 0 0 1 16.5 41.31"/>
+          <path d="M88.5 26.69 A9.15 9.15 0 0 0 88.5 41.31"/>
+          <rect x="-2" y="30.34" width="2" height="7.32" stroke="#f4c45a"/>
+          <rect x="105" y="30.34" width="2" height="7.32" stroke="#f4c45a"/>
+        </g>
+        <g fill="#eef1e8"><circle cx="52.5" cy="34" r=".45"/><circle cx="11" cy="34" r=".45"/><circle cx="94" cy="34" r=".45"/></g>
+        <g font-family="IBM Plex Mono, monospace" font-size="2.6" fill="#f4c45a">
+          <text x="52.5" y="-2" text-anchor="middle">105 m</text>
+          <text x="-3" y="34" text-anchor="middle" transform="rotate(-90 -3 34)">68 m</text>
+          <text x="62.5" y="35">r 9,15</text>
+          <text x="8.25" y="12" text-anchor="middle">16,5</text>
+          <text x="11" y="38" text-anchor="middle">11 m</text>
+        </g>
+      </svg>
+      <ul class="spec">
+        <li><span>Longitud (internacional)</span><b>100–110 m</b></li>
+        <li><span>Anchura (internacional)</span><b>64–75 m</b></li>
+        <li><span>Portería, ancho × alto</span><b>7,32 × 2,44 m</b></li>
+        <li><span>Área de penal</span><b>16,5 × 40,32 m</b></li>
+        <li><span>Punto penal a la línea de meta</span><b>11 m</b></li>
+        <li><span>Radio del círculo central</span><b>9,15 m</b></li>
+        <li><span>Circunferencia del balón</span><b>68–70 cm</b></li>
+        <li><span>Peso del balón al inicio</span><b>410–450 g</b></li>
+      </ul>
+    </div>
+    <p class="footnote">Fuente: Reglas de Juego del IFAB, reglas 1 y 2. El diagrama usa 105 × 68 m, la medida habitual en estadios de élite.</p>
+  </div>
+</section>
+
+<section class="band" id="pizarra">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Pizarra táctica</p>
+      <h2>Elige un sistema</h2>
+      <p>Cambia de formación y mira cómo se recolocan los once. Arrastra sobre el campo para girar la cámara.</p>
+    </div>
+    <div class="board3d">
+      <div class="tabs" role="group" aria-label="Formaciones">
+        <button class="tab" id="f-433" data-f="433" aria-pressed="true"><b>4-3-3</b><small>Extremos abiertos, presión alta</small></button>
+        <button class="tab" id="f-442" data-f="442" aria-pressed="false"><b>4-4-2</b><small>Dos líneas de cuatro, equilibrio</small></button>
+        <button class="tab" id="f-4231" data-f="4231" aria-pressed="false"><b>4-2-3-1</b><small>Doble pivote y mediapunta</small></button>
+        <button class="tab" id="f-352" data-f="352" aria-pressed="false"><b>3-5-2</b><small>Carrileros y dos puntas</small></button>
+      </div>
+      <div class="stage">
+        <canvas id="tactics-canvas" aria-label="Campo en 3D con once jugadores colocados según la formación elegida"></canvas>
+        <div class="stage-note">
+          <p id="f-desc">El 4-3-3 ocupa todo el ancho con dos extremos y un nueve. Los tres medios cierran el centro y sostienen la presión tras pérdida.</p>
+          <span class="hint">Arrastra para girar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band turf" id="historia">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Cronología</p>
+      <h2>De Londres al mundo</h2>
+      <p>Ocho fechas que convirtieron un juego de colegios ingleses en el deporte más seguido del planeta.</p>
+    </div>
+    <ol class="timeline">
+      <li class="key"><time>1863</time><h3>Nace la Football Association</h3><p>En una taberna de Londres se redactan las primeras reglas comunes y se prohíbe jugar el balón con la mano.</p></li>
+      <li><time>1872</time><h3>Primer partido internacional</h3><p>Escocia y Inglaterra empatan 0-0 en Glasgow ante unos 4.000 espectadores.</p></li>
+      <li><time>1904</time><h3>Se funda la FIFA</h3><p>Siete federaciones europeas firman en París el acta fundacional.</p></li>
+      <li class="key"><time>1930</time><h3>Primera Copa del Mundo</h3><p>Uruguay organiza y gana el torneo, con 13 selecciones participantes.</p></li>
+      <li><time>1970</time><h3>Llegan las tarjetas</h3><p>El Mundial de México estrena las tarjetas amarilla y roja y las sustituciones.</p></li>
+      <li><time>1991</time><h3>Mundial femenino</h3><p>China acoge la primera Copa Mundial Femenina; Estados Unidos se lleva el título.</p></li>
+      <li><time>2018</time><h3>El VAR en un Mundial</h3><p>Rusia 2018 es la primera Copa del Mundo con videoarbitraje.</p></li>
+      <li class="key"><time>2026</time><h3>Tres anfitriones, 48 equipos</h3><p>Canadá, México y Estados Unidos organizan la edición más grande de la historia.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="band" id="mundial">
+  <div class="wrap wc">
+    <div class="sec-head" style="margin:0">
+      <p class="eyebrow">Copa Mundial 2026</p>
+      <h2>48 equipos, <em>104</em> partidos</h2>
+      <p>La primera Copa del Mundo con tres países anfitriones y 16 ciudades sede. El formato pasó de 32 a 48 selecciones y de 64 a 104 encuentros.</p>
+    </div>
+    <div class="hosts">
+      <div><strong>Estados Unidos</strong><span>11 ciudades · final en Nueva York/Nueva Jersey</span></div>
+      <div><strong>México</strong><span>3 ciudades · inauguración en el Estadio Azteca</span></div>
+      <div><strong>Canadá</strong><span>2 ciudades · Toronto y Vancouver</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Campo Abierto · el fútbol en tres dimensiones</span>
+    <span>Gráficos 3D con WebGL</span>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  if (!window.THREE) return;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const W = 105, H = 68;
+
+  /* ---------- Textura del campo (10 px por metro) ---------- */
+  function pitchTexture() {
+    const s = 12, pad = 6;
+    const c = document.createElement('canvas');
+    c.width = (W + pad * 2) * s; c.height = (H + pad * 2) * s;
+    const g = c.getContext('2d');
+    g.fillStyle = '#163d27'; g.fillRect(0, 0, c.width, c.height);
+    for (let i = 0; i < 20; i++) {
+      g.fillStyle = i % 2 ? '#1c4a2f' : '#19432a';
+      g.fillRect((pad + i * W / 20) * s, pad * s, W / 20 * s + 1, H * s);
+    }
+    g.translate(pad * s, pad * s); g.scale(s, s);
+    g.strokeStyle = 'rgba(238,241,232,.92)'; g.lineWidth = 0.12; g.fillStyle = 'rgba(238,241,232,.92)';
+    g.strokeRect(0, 0, W, H);
+    g.beginPath(); g.moveTo(W / 2, 0); g.lineTo(W / 2, H); g.stroke();
+    g.beginPath(); g.arc(W / 2, H / 2, 9.15, 0, Math.PI * 2); g.stroke();
+    [[0, 1], [W, -1]].forEach(([x, d]) => {
+      g.strokeRect(d > 0 ? 0 : W - 16.5, H / 2 - 20.16, 16.5, 40.32);
+      g.strokeRect(d > 0 ? 0 : W - 5.5, H / 2 - 9.16, 5.5, 18.32);
+      const px = x + d * 11;
+      g.beginPath(); g.arc(px, H / 2, 0.22, 0, Math.PI * 2); g.fill();
+      const a = Math.acos(5.5 / 9.15);
+      g.beginPath();
+      if (d > 0) g.arc(px, H / 2, 9.15, -a, a); else g.arc(px, H / 2, 9.15, Math.PI - a, Math.PI + a);
+      g.stroke();
+    });
+    g.beginPath(); g.arc(W / 2, H / 2, 0.22, 0, Math.PI * 2); g.fill();
+    [[0, 0, 0], [W, 0, Math.PI / 2], [W, H, Math.PI], [0, H, -Math.PI / 2]].forEach(([x, y, r]) => {
+      g.beginPath(); g.arc(x, y, 1, r, r + Math.PI / 2); g.stroke();
+    });
+    const t = new THREE.CanvasTexture(c);
+    t.anisotropy = 8;
+    return { tex: t, w: W + pad * 2, h: H + pad * 2 };
+  }
+
+  function makePitch() {
+    const p = pitchTexture();
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(p.w, p.h), new THREE.MeshStandardMaterial({ map: p.tex, roughness: .95 }));
+    m.rotation.x = -Math.PI / 2;
+    return m;
+  }
+
+  function makeGoal(x, dir) {
+    const grp = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({ color: 0xf5f5f0, roughness: .4 });
+    const r = 0.06;
+    const post = new THREE.CylinderGeometry(r, r, 2.44, 10);
+    [-3.66, 3.66].forEach(z => { const m = new THREE.Mesh(post, mat); m.position.set(0, 1.22, z); grp.add(m); });
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 7.32 + r * 2, 10), mat);
+    bar.rotation.x = Math.PI / 2; bar.position.y = 2.44; grp.add(bar);
+    const net = new THREE.Mesh(new THREE.BoxGeometry(2, 2.44, 7.32),
+      new THREE.MeshBasicMaterial({ color: 0xeef1e8, wireframe: true, transparent: true, opacity: .18 }));
+    net.position.set(dir * 1, 1.22, 0); grp.add(net);
+    grp.position.x = x;
+    return grp;
+  }
+
+  /* ---------- Balón: teselado de icosaedro truncado en shader ---------- */
+  function makeBall(radius) {
+    const phi = (1 + Math.sqrt(5)) / 2;
+    const pents = [];
+    [[0, 1, phi], [0, 1, -phi], [0, -1, phi], [0, -1, -phi], [1, phi, 0], [1, -phi, 0], [-1, phi, 0], [-1, -phi, 0],
+     [phi, 0, 1], [phi, 0, -1], [-phi, 0, 1], [-phi, 0, -1]].forEach(v => pents.push(new THREE.Vector3(...v).normalize()));
+    const ico = new THREE.IcosahedronGeometry(1, 0);
+    const pos = ico.attributes.position, hexes = [];
+    for (let i = 0; i < pos.count; i += 3) {
+      const v = new THREE.Vector3();
+      for (let k = 0; k < 3; k++) v.add(new THREE.Vector3().fromBufferAttribute(pos, i + k));
+      hexes.push(v.normalize());
+    }
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uP: { value: pents }, uH: { value: hexes }, uLight: { value: new THREE.Vector3(.45, .8, .55).normalize() } },
+      vertexShader: `
+        varying vec3 vObj; varying vec3 vN; varying vec3 vView;
+        void main(){
+          vObj = normalize(position);
+          vN = normalize(normalMatrix * normal);
+          vec4 mv = modelViewMatrix * vec4(position,1.0);
+          vView = -mv.xyz;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        uniform vec3 uP[12]; uniform vec3 uH[20]; uniform vec3 uLight;
+        varying vec3 vObj; varying vec3 vN; varying vec3 vView;
+        void main(){
+          float b1 = -2.0, b2 = -2.0; float isP = 0.0;
+          for (int i=0;i<12;i++){ float d = dot(vObj,uP[i]) - 0.025; if(d>b1){b2=b1;b1=d;isP=1.0;} else if(d>b2){b2=d;} }
+          for (int i=0;i<20;i++){ float d = dot(vObj,uH[i]); if(d>b1){b2=b1;b1=d;isP=0.0;} else if(d>b2){b2=d;} }
+          vec3 base = mix(vec3(0.95,0.95,0.92), vec3(0.07,0.08,0.09), isP);
+          float seam = smoothstep(0.004, 0.014, b1-b2);
+          base = mix(vec3(0.28), base, seam);
+          // relieve suave en cada panel
+          float bulge = smoothstep(0.0, 0.08, b1-b2);
+          vec3 n = normalize(vN);
+          vec3 l = normalize(uLight);
+          float diff = max(dot(n,l),0.0);
+          vec3 v = normalize(vView);
+          float spec = pow(max(dot(reflect(-l,n),v),0.0), 40.0) * (0.25 + 0.5*bulge);
+          float rim = pow(1.0 - max(dot(n,v),0.0), 3.0);
+          vec3 col = base * (0.28 + 0.85*diff) + spec + rim * vec3(0.96,0.77,0.35) * 0.35;
+          gl_FragColor = vec4(col,1.0);
+        }`
+    });
+    return new THREE.Mesh(new THREE.SphereGeometry(radius, 96, 64), mat);
+  }
+
+  function shadowBlob() {
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d');
+    const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(0,0,0,.65)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true, depthWrite: false }));
+    m.rotation.x = -Math.PI / 2;
+    return m;
+  }
+
+  function floodlights(scene) {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const g = c.getContext('2d');
+    const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,240,200,1)'); gr.addColorStop(.25, 'rgba(244,196,90,.6)'); gr.addColorStop(1, 'rgba(244,196,90,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+    const tex = new THREE.CanvasTexture(c);
+    [[-62, -46], [62, -46], [-62, 46], [62, 46]].forEach(([x, z]) => {
+      for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) {
+        const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthWrite: false, blending: THREE.AdditiveBlending }));
+        s.scale.set(5, 5, 1);
+        s.position.set(x + (i - 2.5) * 1.6 * Math.sign(z), 34 + j * 1.6, z);
+        scene.add(s);
+      }
+      const pole = new THREE.Mesh(new THREE.CylinderGeometry(.4, .6, 34, 8), new THREE.MeshStandardMaterial({ color: 0x1b2a24 }));
+      pole.position.set(x, 17, z); scene.add(pole);
+    });
+  }
+
+  function lights(scene) {
+    scene.add(new THREE.HemisphereLight(0xcfe3d6, 0x0a1612, .55));
+    const d = new THREE.DirectionalLight(0xfff0d0, .9); d.position.set(30, 60, 20); scene.add(d);
+  }
+
+  function makeRenderer(canvas) {
+    const r = new THREE.WebGLRenderer({ canvas, antialias: true });
+    r.setPixelRatio(Math.min(devicePixelRatio, 2));
+    r.outputEncoding = THREE.sRGBEncoding;
+    return r;
+  }
+
+  function fit(renderer, camera, canvas) {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    if (canvas.width !== Math.floor(w * renderer.getPixelRatio()) || canvas.height !== Math.floor(h * renderer.getPixelRatio())) {
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+    }
+  }
+
+  function whenVisible(el, cb) {
+    let on = true;
+    new IntersectionObserver(es => { on = es[0].isIntersecting; if (on) cb(); }).observe(el);
+    return () => on;
+  }
+
+  /* =========================== HÉROE =========================== */
+  (function hero() {
+    const canvas = document.getElementById('hero-canvas');
+    const renderer = makeRenderer(canvas);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a1612);
+    scene.fog = new THREE.Fog(0x0a1612, 40, 140);
+    const camera = new THREE.PerspectiveCamera(38, 1, .1, 400);
+    lights(scene); floodlights(scene);
+    scene.add(makePitch());
+    scene.add(makeGoal(W / 2, 1)); scene.add(makeGoal(-W / 2, -1));
+
+    const R = 0.4; // balón ampliado ~3,5× para el plano héroe
+    const ball = makeBall(R);
+    scene.add(ball);
+    const sh = shadowBlob(); sh.position.y = .02; scene.add(sh);
+
+    // Estado del balón
+    const st = { x: 34, y: R, z: 0, vx: 0, vy: 0, vz: 0, spin: new THREE.Vector3(0, 0, -1), sp: .6 };
+    const restX = 34, restZ = 0;
+    let mx = 0, my = 0, t0 = performance.now();
+    addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; }, { passive: true });
+
+    function kick() {
+      if (st.y > R + .05) return;
+      st.vx = 20 + Math.random() * 6; st.vy = 5 + Math.random() * 3; st.vz = (Math.random() - .5) * 6;
+      st.spin.set(st.vz * .2, .3, -1).normalize(); st.sp = 10;
+    }
+    canvas.addEventListener('click', kick);
+    canvas.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') kick(); });
+
+    const isOn = whenVisible(canvas, () => requestAnimationFrame(loop));
+    let last = performance.now();
+    function loop(now) {
+      if (!isOn()) return;
+      const dt = Math.min((now - last) / 1000, 1 / 30); last = now;
+      const t = (now - t0) / 1000;
+      fit(renderer, camera, canvas);
+
+      // física sencilla
+      st.vy -= 22 * dt;
+      st.x += st.vx * dt; st.y += st.vy * dt; st.z += st.vz * dt;
+      if (st.y < R) { st.y = R; st.vy = -st.vy * .55; if (Math.abs(st.vy) < 1.2) st.vy = 0; st.vx *= .82; st.vz *= .82; }
+      st.vx *= (1 - .4 * dt); st.vz *= (1 - .4 * dt);
+      // al entrar en la portería, vuelve al punto de partida
+      if (st.x > W / 2 + 1.5 || Math.abs(st.z) > 30) { st.x = restX; st.z = restZ; st.y = R + 6; st.vx = st.vz = 0; st.vy = 0; }
+      if (st.y <= R && Math.hypot(st.vx, st.vz) < .3 && st.x !== restX) { st.vx += (restX - st.x) * dt * .8; st.vz += (restZ - st.z) * dt * .8; }
+      const idleSpin = reduce ? 0 : .6;
+      st.sp += ((Math.hypot(st.vx, st.vz) > .5 ? Math.hypot(st.vx, st.vz) / R : idleSpin) - st.sp) * Math.min(dt * 3, 1);
+      ball.rotateOnWorldAxis(st.spin, st.sp * dt);
+      ball.position.set(st.x, st.y, st.z);
+      const hgt = st.y - R;
+      sh.position.set(st.x, .02, st.z);
+      sh.scale.setScalar(R * 2.6 * (1 + hgt * .08));
+      sh.material.opacity = Math.max(.15, 1 - hgt * .08);
+
+      // cámara: órbita lenta + parallax
+      const narrow = canvas.clientWidth < 640;
+      const a = (reduce ? 0 : t * .04) + mx * .5 - .35;
+      const dist = narrow ? 8 : 5.6;
+      camera.position.set(st.x * .25 + restX * .75 - Math.cos(a) * dist, 1.5 - my * 1.2 + (narrow ? .6 : 0), Math.sin(a) * dist);
+      camera.lookAt(restX + 5, 1.1 + (narrow ? .9 : 0), narrow ? 0 : -3.2);
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+
+  /* =========================== PIZARRA =========================== */
+  (function tactics() {
+    const canvas = document.getElementById('tactics-canvas');
+    const renderer = makeRenderer(canvas);
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0a1612);
+    scene.fog = new THREE.Fog(0x0a1612, 110, 220);
+    const camera = new THREE.PerspectiveCamera(40, 1, .1, 400);
+    lights(scene);
+    scene.add(makePitch());
+    scene.add(makeGoal(W / 2, 1)); scene.add(makeGoal(-W / 2, -1));
+
+    const F = {
+      '433': { d: [[0, 0], [.2, -.78], [.17, -.26], [.17, .26], [.2, .78], [.44, -.48], [.38, 0], [.44, .48], [.74, -.74], [.8, 0], [.74, .74]],
+        txt: 'El 4-3-3 ocupa todo el ancho con dos extremos y un nueve. Los tres medios cierran el centro y sostienen la presión tras pérdida.' },
+      '442': { d: [[0, 0], [.2, -.78], [.17, -.26], [.17, .26], [.2, .78], [.45, -.8], [.41, -.27], [.41, .27], [.45, .8], [.74, -.24], [.74, .24]],
+        txt: 'El 4-4-2 forma dos líneas de cuatro muy compactas. Dos delanteros fijan a los centrales y facilitan el juego directo.' },
+      '4231': { d: [[0, 0], [.2, -.78], [.17, -.26], [.17, .26], [.2, .78], [.35, -.28], [.35, .28], [.58, -.72], [.58, 0], [.58, .72], [.82, 0]],
+        txt: 'El 4-2-3-1 protege la defensa con un doble pivote. El mediapunta enlaza con el delantero y los extremos atacan por dentro.' },
+      '352': { d: [[0, 0], [.17, -.5], [.15, 0], [.17, .5], [.48, -.9], [.39, -.36], [.33, 0], [.39, .36], [.48, .9], [.74, -.24], [.74, .24]],
+        txt: 'El 3-5-2 suma un central y deja las bandas a los carrileros. Superioridad en el medio y dos puntas cerca del área.' }
+    };
+    const toWorld = ([d, w]) => new THREE.Vector3(-W / 2 + 3.5 + d * 88, 0, w * 27);
+
+    function numberSprite(n) {
+      const c = document.createElement('canvas'); c.width = c.height = 128;
+      const g = c.getContext('2d');
+      g.fillStyle = '#f4c45a'; g.beginPath(); g.arc(64, 64, 58, 0, Math.PI * 2); g.fill();
+      g.fillStyle = '#1a1405'; g.font = '900 72px "Big Shoulders Display", Impact, sans-serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 64, 70);
+      const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false }));
+      s.scale.set(3.4, 3.4, 1); s.renderOrder = 2;
+      return s;
+    }
+
+    const nums = [1, 2, 4, 5, 3, 8, 6, 10, 7, 9, 11];
+    const kit = new THREE.MeshStandardMaterial({ color: 0xeef1e8, roughness: .6 });
+    const gk = new THREE.MeshStandardMaterial({ color: 0xf4c45a, roughness: .6 });
+    const skin = new THREE.MeshStandardMaterial({ color: 0x8a6a52, roughness: .8 });
+    const players = nums.map((n, i) => {
+      const g = new THREE.Group();
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(.9, 1.1, 3.2, 16), i === 0 ? gk : kit);
+      body.position.y = 1.6; g.add(body);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(.7, 16, 12), skin); head.position.y = 3.9; g.add(head);
+      const ring = new THREE.Mesh(new THREE.RingGeometry(1.6, 1.9, 32), new THREE.MeshBasicMaterial({ color: 0xf4c45a, transparent: true, opacity: .55 }));
+      ring.rotation.x = -Math.PI / 2; ring.position.y = .05; g.add(ring);
+      const tag = numberSprite(n); tag.position.y = 6.6; g.add(tag);
+      g.userData = { from: new THREE.Vector3(), to: new THREE.Vector3(), phase: Math.random() * 6 };
+      scene.add(g);
+      return g;
+    });
+    // líneas que unen cada línea del sistema
+    const linkMat = new THREE.LineBasicMaterial({ color: 0xf4c45a, transparent: true, opacity: .35 });
+    let links = null;
+
+    const ball = makeBall(1.1); scene.add(ball);
+    const bsh = shadowBlob(); bsh.scale.setScalar(3); bsh.position.y = .03; scene.add(bsh);
+
+    let tStart = 0, current = '433';
+    function setFormation(key, instant) {
+      current = key;
+      players.forEach((p, i) => {
+        p.userData.from.copy(p.position);
+        p.userData.to.copy(toWorld(F[key].d[i]));
+        if (instant) p.position.copy(p.userData.to);
+      });
+      tStart = instant ? -1e9 : performance.now();
+      document.getElementById('f-desc').textContent = F[key].txt;
+      document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === key)));
+    }
+    document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => setFormation(b.dataset.f)));
+    setFormation('433', true);
+
+    function buildLinks() {
+      if (links) scene.remove(links);
+      const groups = { '433': [[1, 2, 3, 4], [5, 6, 7], [8, 9, 10]], '442': [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]],
+        '4231': [[1, 2, 3, 4], [5, 6], [7, 8, 9], [10]], '352': [[1, 2, 3], [4, 5, 6, 7, 8], [9, 10]] }[current];
+      const pts = [];
+      groups.forEach(gr => { for (let i = 0; i < gr.length - 1; i++) {
+        const a = players[gr[i]].position, b = players[gr[i + 1]].position;
+        pts.push(a.x, .2, a.z, b.x, .2, b.z);
+      } });
+      const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+      links = new THREE.LineSegments(geo, linkMat); scene.add(links);
+    }
+
+    // órbita por arrastre
+    let az = -0.55, el = 0.72, drag = null;
+    canvas.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, az, el }; canvas.setPointerCapture(e.pointerId); });
+    canvas.addEventListener('pointermove', e => {
+      if (!drag) return;
+      az = drag.az - (e.clientX - drag.x) * .006;
+      el = Math.min(1.35, Math.max(.3, drag.el + (e.clientY - drag.y) * .004));
+    });
+    const end = () => { drag = null; };
+    canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+
+    const isOn = whenVisible(canvas, () => requestAnimationFrame(loop));
+    let pass = 0, passT = 0;
+    function loop(now) {
+      if (!isOn()) return;
+      fit(renderer, camera, canvas);
+      const k = Math.min((now - tStart) / 900, 1);
+      const e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      players.forEach((p, i) => {
+        p.position.lerpVectors(p.userData.from, p.userData.to, e);
+        if (!reduce && k >= 1) {
+          const ph = p.userData.phase + now / 1400;
+          p.position.x = p.userData.to.x + Math.sin(ph) * .8;
+          p.position.z = p.userData.to.z + Math.cos(ph * .8) * .6;
+        }
+      });
+      buildLinks();
+
+      // el balón circula entre jugadores
+      const order = [0, 2, 6, 5, 8, 9, 10, 7, 6, 3, 1];
+      if (!reduce) {
+        passT += 1 / 60 * 0.9;
+        if (passT >= 1) { passT = 0; pass = (pass + 1) % order.length; }
+      }
+      const a = players[order[pass]].position, b = players[order[(pass + 1) % order.length]].position;
+      const u = passT < .25 ? 0 : (passT - .25) / .75;
+      const s = u * u * (3 - 2 * u);
+      const bx = a.x + (b.x - a.x) * s + 1.6, bz = a.z + (b.z - a.z) * s;
+      const by = 1.1 + Math.sin(s * Math.PI) * Math.min(a.distanceTo(b) * .12, 5);
+      ball.position.set(bx, by, bz);
+      ball.rotation.z -= .12 * (u > 0 && u < 1 ? 1 : .1);
+      bsh.position.set(bx, .03, bz);
+
+      const narrow = canvas.clientWidth < 520;
+      const dist = narrow ? 130 : 104;
+      camera.position.set(Math.sin(az) * Math.cos(el) * dist, Math.sin(el) * dist, Math.cos(az) * Math.cos(el) * dist);
+      camera.lookAt(-4, 0, 0);
+      renderer.render(scene, camera);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+})();
+</script>
+</body></html>
